@@ -292,9 +292,9 @@ runs:
                     export KVER=${{ inputs.ksu-version }}
                 fi
                     set -x
-                    wget -O /tmp/setup_ksu.sh && bash /tmp/setup_ksu.sh "$KVER"
+                    wget -O /tmp/setup_ksu.sh "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" && bash /tmp/setup_ksu.sh "$KVER"
                     #curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s "$KVER"
-                    set +x
+                    #set +x
             fi
             if [ ${{ inputs.ksu-lkm }} = true ]; then
                 if grep -q "CONFIG_KPROBES=y" "arch/${{ inputs.arch }}/configs/${{ inputs.config }}" ; then
