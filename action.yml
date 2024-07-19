@@ -131,6 +131,10 @@ inputs:
     description: 'Extra options of building kernel.'
     required: false
     default: ""
+  pre-build-script:
+    description: 'Pre-build script for building kernel'
+    required: false
+    default: ""
 
 runs:
   using: 'composite'
@@ -370,6 +374,14 @@ runs:
              fi
              echo "::endgroup::"
          fi
+
+         echo "::group:: Run pre-build script"
+          if [ -z "${{ inputs.pre-build-script }}" ]; then
+            curl -SsL "${{ inputs.pre-build-script }}" | bash
+          else
+            echo "pre-build-script is not set, bypass it"
+          fi
+          
 
          echo "::group:: Building Kernel with selected cross compiler"
          mkdir out -p -v
