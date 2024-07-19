@@ -291,9 +291,9 @@ runs:
                 else
                     export KVER=${{ inputs.ksu-version }}
                 fi
-                    set -x
-                    wget -O /tmp/setup_ksu.sh "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" && bash /tmp/setup_ksu.sh "$KVER"
-                    #curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s "$KVER"
+                    #set -x
+                    #wget -O /tmp/setup_ksu.sh "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" && bash /tmp/setup_ksu.sh "$KVER"
+                    curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s "$KVER"
                     #set +x
             fi
             if [ ${{ inputs.ksu-lkm }} = true ]; then
@@ -307,7 +307,7 @@ runs:
                 if grep -q "CONFIG_KPROBES=y" "arch/${{ inputs.arch }}/configs/${{ inputs.config }}" ; then
                     echo "CONFIG_KPROBES is enabled, skip patch."
                 else
-                    curl -SsL https://github.com/dabao1955/kernel_build_action/raw/main/kernelsu/ksupatchs.sh | bash
+                    curl -SsL https://github.com/dabao1955/kernel_build_action/raw/main/kernelsu/ksupatch.sh | bash
                 fi
             fi
             echo "::endgroup::"
