@@ -274,8 +274,10 @@ runs:
               echo "::group:: Pulling Kernel Source with repo"
               mkdir -p kernel/${{ inputs.kernel-dir }}
               cd kernel/${{ inputs.kernel-dir }}
+              git config --global color.ui false
               repo init -u ${{ inputs.kernel-url }} -b ${{ inputs.kernel-branch }}
               repo sync
+              cd ../../
               echo "::endgroup::"
           else
               echo "::group:: Pulling Kernel Source with git"
