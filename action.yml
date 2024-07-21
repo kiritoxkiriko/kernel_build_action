@@ -279,7 +279,7 @@ runs:
               cd /tmp/repo_dir
               #cd kernel/${{ inputs.kernel-dir }}
               git config --global color.ui false
-              repo init -u ${{ inputs.kernel-url }} -b ${{ inputs.kernel-branch }} --depth=${{ inputs.depth }}
+              repo init -u https://android.googlesource.com/kernel/manifest -b ${{ inputs.kernel-branch }} --depth=${{ inputs.depth }}
               repo sync -c
               #ls -lh
               cd $CURR_DIR
@@ -316,7 +316,7 @@ runs:
                 else
                     export KVER=${{ inputs.ksu-version }}
                 fi
-                
+
                 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s "$KVER"
             fi
             if [ ${{ inputs.ksu-lkm }} = true ]; then
