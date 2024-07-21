@@ -6,9 +6,10 @@ branding:
   color: 'blue'
 
 inputs:
-  use-repo:
-    description: 'use repo'
+  build-gki:
+    description: 'build from gki repo instead of custom kernel url'
     required: false
+    default: false
   kernel-url:
     description: 'Kernel Source Url'
     required: true
@@ -270,7 +271,7 @@ runs:
              echo "::endgroup::"
          fi
 
-          if [ "${{ inputs.use-repo }}" = "true" ]; then
+          if [ "${{ inputs.build-gki }}" = "true" ]; then
               echo "::group:: Pulling Kernel Source with repo"
               CURR_DIR=$PWD
               mkdir -p kernel/${{ inputs.kernel-dir }}
@@ -308,17 +309,15 @@ runs:
             if [ -f KernelSU/kernel/Kconfig ]; then
                 echo "KernelSU has been initialized,skipped."
             else
-                if [[ "${{ inputs.ksu-version }}" == "main" ]] || version_gt "${{ inputs.ksu-version }}" "v10.9.5"; then
+                if [[ "${{ inputs.build-gki }}" != "true" ]] && ([[ "${{ inputs.ksu-version }}" == "main" ]] || version_gt "${{ inputs.ksu-version }}" "v0.9.5"); then
                     echo "Warning: The KernelSU version you selected was detected to be ${{ inputs.ksu-version }}, but KernelSU has dropped support for the non-gki kernel since 0.9.5. 
                     This will force switch to v0.9.5."
                     export KVER=v0.9.5
                 else
                     export KVER=${{ inputs.ksu-version }}
                 fi
-                    #set -x
-                    #wget -O /tmp/setup_ksu.sh "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" && bash /tmp/setup_ksu.sh "$KVER"
-                    curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s "$KVER"
-                    #set +x
+                
+                curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s "$KVER"
             fi
             if [ ${{ inputs.ksu-lkm }} = true ]; then
                 if grep -q "CONFIG_KPROBES=y" "arch/${{ inputs.arch }}/configs/${{ inputs.config }}" ; then
