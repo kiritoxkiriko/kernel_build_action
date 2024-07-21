@@ -6,6 +6,9 @@ branding:
   color: 'blue'
 
 inputs:
+  use-repo:
+    description: 'use repo'
+    required: false
   kernel-url:
     description: 'Kernel Source Url'
     required: true
@@ -267,9 +270,19 @@ runs:
              echo "::endgroup::"
          fi
 
-         echo "::group:: Pulling Kernel Source"
-         git clone --recursive ${{ inputs.kernel-url }} -b "${{ inputs.kernel-branch }}" --depth=${{ inputs.depth }} kernel/${{ inputs.kernel-dir }}
-         echo "::endgroup::"
+          if [ "${{ inputs.use-repo }}" = "true" ]; then
+              echo "::group:: Pulling Kernel Source with repo"
+              mkdir -p kernel/${{ inputs.kernel-dir }}
+              cd kernel/${{ inputs.kernel-dir }}
+              repo init -u ${{ inputs.kernel-url }} -b ${{ inputs.kernel-branch }}
+              repo sync
+              echo "::endgroup::"
+          else
+              echo "::group:: Pulling Kernel Source with git"
+              git clone --recursive ${{ inputs.kernel-url }} -b "${{ inputs.kernel-branch }}" --depth=${{ inputs.depth }} kernel/${{ inputs.kernel-dir }}
+              echo "::endgroup::"
+          fi
+
 
          if [ ! -z  "${{ inputs.vendor-url }}" ]; then
              echo "::group:: Pulling Kernel vendor source"
