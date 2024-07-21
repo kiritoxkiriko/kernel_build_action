@@ -275,8 +275,9 @@ runs:
               mkdir -p kernel/${{ inputs.kernel-dir }}
               cd kernel/${{ inputs.kernel-dir }}
               git config --global color.ui false
-              repo init -u ${{ inputs.kernel-url }} -b ${{ inputs.kernel-branch }}
-              repo sync
+              repo init -u ${{ inputs.kernel-url }} -b ${{ inputs.kernel-branch }} --depth=${{ inputs.depth }}
+              repo sync -c
+              ls -lh
               cd ../../
               echo "::endgroup::"
           else
