@@ -272,13 +272,17 @@ runs:
 
           if [ "${{ inputs.use-repo }}" = "true" ]; then
               echo "::group:: Pulling Kernel Source with repo"
+              CURR_DIR=$PWD
               mkdir -p kernel/${{ inputs.kernel-dir }}
-              cd kernel/${{ inputs.kernel-dir }}
+              mkdir -p /tmp/repo_dir
+              cd /tmp/repo_dir
+              #cd kernel/${{ inputs.kernel-dir }}
               git config --global color.ui false
               repo init -u ${{ inputs.kernel-url }} -b ${{ inputs.kernel-branch }} --depth=${{ inputs.depth }}
               repo sync -c
-              ls -lh
-              cd ../../
+              #ls -lh
+              cd $CURR_DIR
+              cp -r /tmp/repo_dir/common/*  kernel/${{ inputs.kernel-dir }}
               echo "::endgroup::"
           else
               echo "::group:: Pulling Kernel Source with git"
